@@ -46,10 +46,8 @@ public class Task {
     @NotBlank(message = "Pass code must not be empty")
     private String passCode;
 
-    @ElementCollection
-    @CollectionTable(name = "previous_tasks_ids", joinColumns = @JoinColumn(name = "task_id"))
-    @Column(name = "previous_task_id")
-    private List<Integer> previousTasksIDs = new ArrayList<>();
+    @Column(name = "previous_tasks_ids")
+    private String previousTasksIDs;
 
     @OneToMany(mappedBy = "relatedTask")
     private List<Action> actions = new ArrayList<>();
