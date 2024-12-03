@@ -3,7 +3,6 @@ package ru.spb.vika.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import ru.spb.vika.util.ActionType;
 
 @Entity
 @Table(name = "actions")
@@ -18,22 +17,12 @@ public class Action {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "action")
     @NotBlank(message = "Action name must not be empty")
-    private String name;
+    private String action;
 
     @Column(name = "description")
     private String description;
-
-    @Column(name = "is_complete")
-    private boolean isComplete;
-
-    @Column(name = "action_results")
-    private String actionNumericResults;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "action_type")
-    private ActionType actionType;
 
     @ManyToOne
     @JoinColumn(name = "task_id", referencedColumnName = "id")

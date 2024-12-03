@@ -20,10 +20,10 @@ public class Operation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "ops_name")
     @NotBlank(message = "Operation name must not be empty")
-    private String name;
+    private String opsName;
 
     @OneToMany(mappedBy = "relatedOperation")
-    private List<Task> operationsTasks = new ArrayList<>();
+    private List<Team> teamClasses = new ArrayList<>();
 }

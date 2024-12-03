@@ -2,6 +2,7 @@ package ru.spb.vika.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -17,15 +18,15 @@ public class Condition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name")
+    @Column(name = "condition")
     @NotBlank(message = "Condition name must not be empty")
-    private String name;
+    private String condition;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "is_achieved")
-    private boolean isAchieved;
+    @Column(name = "passed")
+    private boolean passed = false;
 
     @ManyToOne
     @JoinColumn(name = "task_id", referencedColumnName = "id")

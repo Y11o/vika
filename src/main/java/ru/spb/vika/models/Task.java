@@ -25,22 +25,31 @@ public class Task {
     @NotBlank(message = "Task name must not be empty")
     private String taskName;
 
+    @Column(name = "serial_number")
+    @NotBlank(message = "Serial number must not be empty")
+    private String serialNumber;
+
     @Column(name = "location")
     @NotBlank(message = "Location must not be empty")
     private String location;
 
-    @Column(name = "enemy")
+    @Column(name = "enemy_info")
     @Nullable
-    private String enemy;
+    private String enemyInfo;
 
-    @Column(name = "description")
+    @Column(name = "desc")
     @NotBlank(message = "Description must not be empty")
     @Lob
-    private String description;
+    private String desc;
 
-    @Column(name = "activation_code")
-    @NotBlank(message = "Activation code must not be empty")
-    private String activationCode;
+    @Column(name = "pass_code")
+    @NotBlank(message = "Pass code must not be empty")
+    private String passCode;
+
+    @ElementCollection
+    @CollectionTable(name = "previous_tasks_ids", joinColumns = @JoinColumn(name = "task_id"))
+    @Column(name = "previous_task_id")
+    private List<Integer> previousTasksIDs = new ArrayList<>();
 
     @OneToMany(mappedBy = "relatedTask")
     private List<Action> actions = new ArrayList<>();
@@ -48,12 +57,7 @@ public class Task {
     @OneToMany(mappedBy = "relatedTask")
     private List<Condition> conditions = new ArrayList<>();
 
-    @Nullable
-    @OneToOne
-    @JoinColumn(name = "previous_task_id", referencedColumnName = "id")
-    private Task previousTask;
-
     @ManyToOne
-    @JoinColumn(name = "operation_id", referencedColumnName = "id")
-    private Operation relatedOperation;
+    @JoinColumn(name = "team_id", referencedColumnName = "id")
+    private Team teamClass;
 }
