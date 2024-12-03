@@ -37,10 +37,10 @@ public class Task {
     @Nullable
     private String enemyInfo;
 
-    @Column(name = "desc")
+    @Column(name = "description")
     @NotBlank(message = "Description must not be empty")
     @Lob
-    private String desc;
+    private String description;
 
     @Column(name = "pass_code")
     @NotBlank(message = "Pass code must not be empty")
