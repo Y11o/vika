@@ -1,8 +1,8 @@
 package ru.spb.vika.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -12,6 +12,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@JsonIgnoreProperties({"relatedTask"})
 public class Condition {
 
     @Id
