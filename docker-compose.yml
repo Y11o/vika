@@ -2,7 +2,7 @@ version: '3.8'
 services:
   vika-service:
     container_name: "vika-service"
-    image: vika:0.0.1
+    image: vika:release
     build:
       context: .
       dockerfile: Dockerfile
