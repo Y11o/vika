@@ -16,7 +16,6 @@ import lombok.*;
 public class Condition {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "condition")

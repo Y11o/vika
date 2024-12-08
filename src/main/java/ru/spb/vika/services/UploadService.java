@@ -1,5 +1,6 @@
 package ru.spb.vika.services;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,40 +29,41 @@ public class UploadService {
         this.teamsRepository = teamsRepository;
     }
 
-    public ResponseEntity<?> saveOperation(OperationDTO operationRequest) {
+    public ResponseEntity<?> saveOperation(List<OperationDTO> operationsRequest) {
         try {
+            for (OperationDTO operationRequest : operationsRequest) {
+                Operation operation = operationsRepository.save(Operation.builder()
+                        .id(operationRequest.getId())
+                        .opsName(operationRequest.getOpsName())
+                        .build());
 
-            Operation operation = Operation.builder()
-                    .id(operationRequest.getId())
-                    .opsName(operationRequest.getOpsName())
-                    .build();
+                List<Team> savedTeams = new ArrayList<>();
 
-            List<Team> savedTeams = new ArrayList<>();
-
-            for (TeamDTO teamDTO : operationRequest.getTeamClasses()) {
-                List<Task> savedTasks = new ArrayList<>();
-                Team team = teamBuildAndSave(teamDTO, operation);
-                for (TaskDTO taskDTO : teamDTO.getRelatedTasks()) {
-                    List<Action> savedActions = new ArrayList<>();
-                    List<Condition> savedConditions = new ArrayList<>();
-                    Task task = taskBuildAndSave(taskDTO, team);
-                    for (ActionDTO actionDTO : taskDTO.getActions()) {
-                        savedActions.add(actionBuildAndSave(actionDTO, task));
+                for (TeamDTO teamDTO : operationRequest.getTeamClasses()) {
+                    List<Task> savedTasks = new ArrayList<>();
+                    Team team = teamBuildAndSave(teamDTO, operation);
+                    for (TaskDTO taskDTO : teamDTO.getRelatedTasks()) {
+                        List<Action> savedActions = new ArrayList<>();
+                        List<Condition> savedConditions = new ArrayList<>();
+                        Task task = taskBuildAndSave(taskDTO, team);
+                        for (ActionDTO actionDTO : taskDTO.getActions()) {
+                            savedActions.add(actionBuildAndSave(actionDTO, task));
+                        }
+                        for (ConditionDTO conditionDTO : taskDTO.getConditions()) {
+                            savedConditions.add(conditionBuildAndSave(conditionDTO, task));
+                        }
+                        task.setActions(savedActions);
+                        task.setConditions(savedConditions);
+                        savedTasks.add(task);
                     }
-                    for (ConditionDTO conditionDTO : taskDTO.getConditions()) {
-                        savedConditions.add(conditionBuildAndSave(conditionDTO, task));
-                    }
-                    task.setActions(savedActions);
-                    task.setConditions(savedConditions);
-                    savedTasks.add(task);
+                    team.setRelatedTasks(savedTasks);
+                    savedTeams.add(team);
                 }
-                team.setRelatedTasks(savedTasks);
-                savedTeams.add(team);
+                operation.setTeamClasses(savedTeams);
+                operationsRepository.save(operation);
             }
-            operation.setTeamClasses(savedTeams);
-            operationsRepository.save(operation);
             return ResponseEntity.ok("Operation successfully saved!");
-        } catch (NullPointerException | NumberFormatException exception) {
+        } catch (NullPointerException | NumberFormatException | ConstraintViolationException exception) {
             throw new OperationNotCreatedException(exception.getMessage());
         }
     }

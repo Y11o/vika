@@ -20,7 +20,6 @@ import java.util.List;
 public class Task {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "task_name")
@@ -41,7 +40,6 @@ public class Task {
 
     @Column(name = "description")
     @NotBlank(message = "Description must not be empty")
-    @Lob
     private String description;
 
     @Column(name = "pass_code")

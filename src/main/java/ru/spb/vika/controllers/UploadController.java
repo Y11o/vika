@@ -26,7 +26,7 @@ public class UploadController {
     }
 
     @PostMapping("/operation")
-    public ResponseEntity<?> uploadData(@Valid @RequestBody OperationDTO operationRequest, BindingResult bindingResult) {
+    public ResponseEntity<?> uploadData(@Valid @RequestBody List<OperationDTO> operationRequest, BindingResult bindingResult) {
         if (bindingResult != null && bindingResult.hasErrors()) {
             throw new OperationNotCreatedException(buildErrorMessage(bindingResult));
         }
@@ -34,7 +34,7 @@ public class UploadController {
     }
 
     @ExceptionHandler(value = OperationNotCreatedException.class)
-    protected ResponseEntity<?> handleUserNotCreatedException(OperationNotCreatedException e) {
+    public ResponseEntity<?> handleUserNotCreatedException(OperationNotCreatedException e) {
         ErrorResponse response = new ErrorResponse(
                 e.getMessage(),
                 System.currentTimeMillis()

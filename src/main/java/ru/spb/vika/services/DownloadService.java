@@ -1,5 +1,6 @@
 package ru.spb.vika.services;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class DownloadService {
         this.operationsRepository = operationsRepository;
     }
 
+    @Transactional
     public ResponseEntity<?> getById(Integer id) {
         return ResponseEntity.ok(operationsRepository.findById(id).orElseThrow(
                 () -> new ItemNotFoundException("Operation with id " + id + " was not found!")
