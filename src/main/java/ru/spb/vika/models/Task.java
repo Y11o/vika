@@ -31,7 +31,6 @@ public class Task {
     private String serialNumber;
 
     @Column(name = "location")
-    @NotBlank(message = "Location must not be empty")
     private String location;
 
     @Column(name = "enemy_info")
@@ -39,15 +38,22 @@ public class Task {
     private String enemyInfo;
 
     @Column(name = "description")
-    @NotBlank(message = "Description must not be empty")
     private String description;
 
+    @Column(name = "alt_description")
+    private String altDescription;
+
     @Column(name = "pass_code")
-    @NotBlank(message = "Pass code must not be empty")
     private String passCode;
 
     @Column(name = "previous_tasks_ids")
-    private String previousTasksIDs;
+    private String prevTasksIDs;
+
+    @Column(name = "is_ending")
+    private boolean isEnding;
+
+    @Column(name = "all_conditions_required")
+    private boolean allCondsRequired;
 
     @OneToMany(mappedBy = "relatedTask")
     private List<Action> actions = new ArrayList<>();

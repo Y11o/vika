@@ -18,19 +18,22 @@ public class TaskDTO {
     @NotBlank(message = "Serial number must not be empty")
     private String serialNumber;
 
-    @NotBlank(message = "Location must not be empty")
     private String location;
 
     @Nullable
     private String enemyInfo;
 
-    @NotBlank(message = "Description must not be empty")
     private String description;
 
-    @NotBlank(message = "Pass code must not be empty")
+    private String altDescription;
+
     private String passCode;
 
-    private String previousTasksIDs;
+    private String prevTasksIDs;
+
+    private boolean isEnding;
+
+    private boolean allCondsRequired;
 
     private List<ActionDTO> actions = new ArrayList<>();
 

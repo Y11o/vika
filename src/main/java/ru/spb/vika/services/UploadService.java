@@ -81,12 +81,15 @@ public class UploadService {
         return tasksRepository.save(Task.builder()
                 .id(taskDTO.getId())
                 .taskName(taskDTO.getTaskName())
+                .allCondsRequired(taskDTO.isAllCondsRequired())
+                .isEnding(taskDTO.isEnding())
+                .altDescription(taskDTO.getAltDescription())
                 .serialNumber(taskDTO.getSerialNumber())
                 .description(taskDTO.getDescription())
                 .location(taskDTO.getLocation())
                 .enemyInfo(taskDTO.getEnemyInfo())
                 .passCode(taskDTO.getPassCode())
-                .previousTasksIDs(taskDTO.getPreviousTasksIDs())
+                .prevTasksIDs(taskDTO.getPrevTasksIDs())
                 .teamClass(team)
                 .build());
     }
