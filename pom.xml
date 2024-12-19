@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ru.spb.vika</groupId>
 	<artifactId>vika</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>1.0.0-RELEASE</version>
 	<name>vika</name>
 	<description>Built-in intelligent attack coordinator</description>
 	<url/>
