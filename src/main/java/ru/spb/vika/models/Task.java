@@ -1,6 +1,7 @@
 package ru.spb.vika.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -16,11 +17,14 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@JsonIgnoreProperties({"teamClass"})
+@JsonIgnoreProperties({"teamClass", "task_id"})
 public class Task {
 
     @Id
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer task_id;
+
+    private int id;
 
     @Column(name = "task_name")
     @NotBlank(message = "Task name must not be empty")
@@ -50,6 +54,7 @@ public class Task {
     private String prevTasksIDs;
 
     @Column(name = "is_ending")
+    @JsonProperty("isEnding")
     private boolean isEnding;
 
     @Column(name = "all_conditions_required")

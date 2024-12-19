@@ -12,11 +12,14 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@JsonIgnoreProperties({"relatedTask"})
+@JsonIgnoreProperties({"relatedTask", "action_id"})
 public class Action {
 
     @Id
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer action_id;
+
+    private int id;
 
     @Column(name = "action")
     @NotBlank(message = "Action name must not be empty")

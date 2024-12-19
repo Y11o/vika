@@ -12,11 +12,14 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@JsonIgnoreProperties({"relatedTask"})
+@JsonIgnoreProperties({"relatedTask", "condition_id"})
 public class Condition {
 
     @Id
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer condition_id;
+
+    private int id;
 
     @Column(name = "condition")
     @NotBlank(message = "Condition name must not be empty")
@@ -26,7 +29,7 @@ public class Condition {
     private String description;
 
     @Column(name = "passed")
-    private boolean passed = false;
+    private boolean passed;
 
     @ManyToOne
     @JoinColumn(name = "task_id", referencedColumnName = "id")

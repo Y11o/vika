@@ -15,10 +15,13 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@JsonIgnoreProperties({"relatedOperation"})
+@JsonIgnoreProperties({"relatedOperation", "team_id"})
 public class Team {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer team_id;
+
     private int id;
 
     @Column(name = "class_name")

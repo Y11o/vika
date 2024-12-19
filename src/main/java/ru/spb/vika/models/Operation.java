@@ -1,5 +1,6 @@
 package ru.spb.vika.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -14,10 +15,14 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@JsonIgnoreProperties({"operation_id"})
 public class Operation {
 
     @Id
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer operation_id;
+
+    private int id;
 
     @Column(name = "ops_name")
     @NotBlank(message = "Operation name must not be empty")

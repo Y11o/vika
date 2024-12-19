@@ -13,5 +13,5 @@ public class ConditionDTO {
 
     private String description;
 
-    private boolean passed = false;
+    private boolean passed;
 }
