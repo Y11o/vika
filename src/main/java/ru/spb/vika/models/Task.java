@@ -60,10 +60,10 @@ public class Task {
     @Column(name = "all_conditions_required")
     private boolean allCondsRequired;
 
-    @OneToMany(mappedBy = "relatedTask")
+    @OneToMany(mappedBy = "relatedTask", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Action> actions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "relatedTask")
+    @OneToMany(mappedBy = "relatedTask", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Condition> conditions = new ArrayList<>();
 
     @ManyToOne

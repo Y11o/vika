@@ -25,6 +25,6 @@ public class Operation {
     @NotBlank(message = "Operation name must not be empty")
     private String opsName;
 
-    @OneToMany(mappedBy = "relatedOperation")
+    @OneToMany(mappedBy = "relatedOperation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Team> teamClasses = new ArrayList<>();
 }

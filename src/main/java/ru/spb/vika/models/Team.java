@@ -32,7 +32,7 @@ public class Team {
     @NotBlank(message = "Class access code must not be empty")
     private String classAccessCode;
 
-    @OneToMany(mappedBy = "teamClass")
+    @OneToMany(mappedBy = "teamClass", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> relatedTasks = new ArrayList<>();
 
     @ManyToOne
