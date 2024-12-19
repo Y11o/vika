@@ -67,6 +67,6 @@ public class Task {
     private List<Condition> conditions = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "team_id", referencedColumnName = "id")
+    @JoinColumn(name = "team_id", referencedColumnName = "team_id")
     private Team teamClass;
 }

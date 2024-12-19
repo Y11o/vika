@@ -29,6 +29,6 @@ public class Action {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "task_id", referencedColumnName = "id")
+    @JoinColumn(name = "task_id", referencedColumnName = "task_id")
     private Task relatedTask;
 }

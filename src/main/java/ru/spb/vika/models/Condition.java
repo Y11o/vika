@@ -32,6 +32,6 @@ public class Condition {
     private boolean passed;
 
     @ManyToOne
-    @JoinColumn(name = "task_id", referencedColumnName = "id")
+    @JoinColumn(name = "task_id", referencedColumnName = "task_id")
     private Task relatedTask;
 }

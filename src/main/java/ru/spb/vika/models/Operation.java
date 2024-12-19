@@ -19,9 +19,6 @@ import java.util.List;
 public class Operation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer operation_id;
-
     private int id;
 
     @Column(name = "ops_name")

@@ -1,5 +1,6 @@
 package ru.spb.vika.dto.OperationDTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -31,6 +32,7 @@ public class TaskDTO {
 
     private String prevTasksIDs;
 
+    @JsonProperty("isEnding")
     private boolean isEnding;
 
     private boolean allCondsRequired;
