@@ -1,5 +1,6 @@
 package ru.spb.vika.services;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -77,6 +78,7 @@ public class UploadService {
                 .build());
     }
 
+    @Transactional
     private Task taskBuildAndSave(TaskDTO taskDTO, Team team) {
         return tasksRepository.save(Task.builder()
                 .id(taskDTO.getId())

@@ -41,10 +41,10 @@ public class Task {
     @Nullable
     private String enemyInfo;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 2500)
     private String description;
 
-    @Column(name = "alt_description")
+    @Column(name = "alt_description", length = 2500)
     private String altDescription;
 
     @Column(name = "pass_code")
