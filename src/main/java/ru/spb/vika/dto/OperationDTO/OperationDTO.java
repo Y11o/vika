@@ -2,9 +2,7 @@ package ru.spb.vika.dto.OperationDTO;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class OperationDTO {
@@ -12,7 +10,8 @@ public class OperationDTO {
     private Integer id;
 
     @NotBlank(message = "Operation name must not be empty")
-    private String opsName;
+    private String name;
 
-    private List<TeamDTO> teamClasses = new ArrayList<>();
+    @NotBlank(message = "Operation file must not be null")
+    private MultipartFile file;
 }

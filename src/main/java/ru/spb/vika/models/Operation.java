@@ -15,7 +15,6 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@JsonIgnoreProperties({"operation_id"})
 public class Operation {
 
     @Id
@@ -23,8 +22,8 @@ public class Operation {
 
     @Column(name = "ops_name")
     @NotBlank(message = "Operation name must not be empty")
-    private String opsName;
+    private String name;
 
-    @OneToMany(mappedBy = "relatedOperation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Team> teamClasses = new ArrayList<>();
+    @Column(name = "file_name")
+    private String fileName;
 }

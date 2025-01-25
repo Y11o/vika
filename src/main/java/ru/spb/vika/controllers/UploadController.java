@@ -11,6 +11,7 @@ import ru.spb.vika.dto.OperationDTO.OperationDTO;
 import ru.spb.vika.services.UploadService;
 import ru.spb.vika.util.ErrorResponse;
 import ru.spb.vika.util.OperationNotCreatedException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,11 +27,11 @@ public class UploadController {
     }
 
     @PostMapping("/operation")
-    public ResponseEntity<?> uploadData(@Valid @RequestBody List<OperationDTO> operationRequest, BindingResult bindingResult) {
+    public ResponseEntity<?> uploadData(@Valid @RequestBody OperationDTO operationRequest, BindingResult bindingResult) {
         if (bindingResult != null && bindingResult.hasErrors()) {
             throw new OperationNotCreatedException(buildErrorMessage(bindingResult));
         }
-        return uploadService.saveOperation(operationRequest);
+        return uploadService.saveOperation(operationRequest, operationRequest.getFile());
     }
 
     @ExceptionHandler(value = OperationNotCreatedException.class)

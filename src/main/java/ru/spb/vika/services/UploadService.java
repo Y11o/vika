@@ -1,116 +1,70 @@
 package ru.spb.vika.services;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.spb.vika.dto.OperationDTO.*;
 import ru.spb.vika.models.*;
 import ru.spb.vika.repositories.*;
 import ru.spb.vika.util.OperationNotCreatedException;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class UploadService {
-    private final ActionsRepository actionsRepository;
-    private final ConditionsRepository conditionsRepository;
     private final OperationsRepository operationsRepository;
-    private final TasksRepository tasksRepository;
-    private final TeamsRepository teamsRepository;
+    @Value("${upload_dir_operations}")
+    private String UPLOAD_DIR;
 
     @Autowired
-    public UploadService(ActionsRepository actionsRepository, ConditionsRepository conditionsRepository, OperationsRepository operationsRepository, TasksRepository tasksRepository, TeamsRepository teamsRepository) {
-        this.actionsRepository = actionsRepository;
-        this.conditionsRepository = conditionsRepository;
+    public UploadService(OperationsRepository operationsRepository) {
         this.operationsRepository = operationsRepository;
-        this.tasksRepository = tasksRepository;
-        this.teamsRepository = teamsRepository;
     }
 
-    public ResponseEntity<?> saveOperation(List<OperationDTO> operationsRequest) {
-        try {
-            for (OperationDTO operationRequest : operationsRequest) {
-                Operation operation = operationsRepository.save(Operation.builder()
-                        .id(operationRequest.getId())
-                        .opsName(operationRequest.getOpsName())
-                        .build());
+    public ResponseEntity<?> saveOperation(OperationDTO operationRequest, MultipartFile file) {
+        if(file == null || file.isEmpty()){
+            throw new IllegalArgumentException("Файл не может быть пустым.");
+        }
 
-                List<Team> savedTeams = new ArrayList<>();
+        String contentType = file.getContentType();
+        String allowedTypes = "multipart/form-data";
+        if(!allowedTypes.equals(contentType)){
+            throw new IllegalArgumentException("Тип файла " + contentType + " не поддерживается. Возможные типы: " + allowedTypes);
+        }
 
-                for (TeamDTO teamDTO : operationRequest.getTeamClasses()) {
-                    List<Task> savedTasks = new ArrayList<>();
-                    Team team = teamBuildAndSave(teamDTO, operation);
-                    for (TaskDTO taskDTO : teamDTO.getRelatedTasks()) {
-                        List<Action> savedActions = new ArrayList<>();
-                        List<Condition> savedConditions = new ArrayList<>();
-                        Task task = taskBuildAndSave(taskDTO, team);
-                        for (ActionDTO actionDTO : taskDTO.getActions()) {
-                            savedActions.add(actionBuildAndSave(actionDTO, task));
-                        }
-                        for (ConditionDTO conditionDTO : taskDTO.getConditions()) {
-                            savedConditions.add(conditionBuildAndSave(conditionDTO, task));
-                        }
-                        task.setActions(savedActions);
-                        task.setConditions(savedConditions);
-                        savedTasks.add(task);
-                    }
-                    team.setRelatedTasks(savedTasks);
-                    savedTeams.add(team);
-                }
-                operation.setTeamClasses(savedTeams);
-                operationsRepository.save(operation);
+        Path opsDirPath = Paths.get(UPLOAD_DIR, operationRequest.getName() + "_" + operationRequest.getId());
+        File opsDir = opsDirPath.toFile();
+        if (!opsDir.exists()) {
+            opsDir.mkdirs();
+        }
+
+        try (InputStream inputStream = file.getInputStream();
+             OutputStream outputStream = Files.newOutputStream(opsDirPath)) {
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
             }
+
+            operationsRepository.save(Operation.builder()
+                    .id(operationRequest.getId())
+                    .name(operationRequest.getName())
+                    .fileName(opsDirPath.toString())
+                    .build());
             return ResponseEntity.ok("Operation successfully saved!");
-        } catch (NullPointerException | NumberFormatException | ConstraintViolationException exception) {
+        } catch (NullPointerException | NumberFormatException | ConstraintViolationException | IOException exception) {
             throw new OperationNotCreatedException(exception.getMessage());
         }
-    }
-
-    private Team teamBuildAndSave(TeamDTO teamDTO, Operation operation) {
-        return teamsRepository.save(Team.builder()
-                .id(teamDTO.getId())
-                .className(teamDTO.getClassName())
-                .classAccessCode(teamDTO.getClassAccessCode())
-                .relatedOperation(operation)
-                .build());
-    }
-
-    @Transactional
-    private Task taskBuildAndSave(TaskDTO taskDTO, Team team) {
-        return tasksRepository.save(Task.builder()
-                .id(taskDTO.getId())
-                .taskName(taskDTO.getTaskName())
-                .allCondsRequired(taskDTO.isAllCondsRequired())
-                .isEnding(taskDTO.isEnding())
-                .altDescription(taskDTO.getAltDescription())
-                .serialNumber(taskDTO.getSerialNumber())
-                .description(taskDTO.getDescription())
-                .location(taskDTO.getLocation())
-                .enemyInfo(taskDTO.getEnemyInfo())
-                .passCode(taskDTO.getPassCode())
-                .prevTasksIDs(taskDTO.getPrevTasksIDs())
-                .teamClass(team)
-                .build());
-    }
-
-    private Action actionBuildAndSave(ActionDTO actionDTO, Task task) {
-        return actionsRepository.save(Action.builder()
-                .id(actionDTO.getId())
-                .action(actionDTO.getAction())
-                .description(actionDTO.getDescription())
-                .relatedTask(task)
-                .build());
-    }
-
-    private Condition conditionBuildAndSave(ConditionDTO conditionDTO, Task task) {
-        return conditionsRepository.save(Condition.builder()
-                .id(conditionDTO.getId())
-                .condition(conditionDTO.getCondition())
-                .description(conditionDTO.getDescription())
-                .passed(conditionDTO.isPassed())
-                .relatedTask(task).build());
     }
 }
