@@ -31,7 +31,7 @@ public class UploadController {
         if (bindingResult != null && bindingResult.hasErrors()) {
             throw new OperationNotCreatedException(buildErrorMessage(bindingResult));
         }
-        return uploadService.saveOperation(operationRequest, operationRequest.getFile());
+        return uploadService.saveOperation(operationRequest);
     }
 
     @ExceptionHandler(value = OperationNotCreatedException.class)

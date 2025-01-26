@@ -20,10 +20,11 @@ public class Operation {
     @Id
     private int id;
 
-    @Column(name = "ops_name")
+    @Column(name = "name")
     @NotBlank(message = "Operation name must not be empty")
     private String name;
 
-    @Column(name = "file_name")
-    private String fileName;
+    @Lob
+    @Column(name = "operation")
+    private String operation;
 }

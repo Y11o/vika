@@ -34,24 +34,7 @@ public class DownloadService {
         Operation operation = operationsRepository.findById(id).orElseThrow(
                 () -> new ItemNotFoundException("Operation with id " + id + " was not found!")
         );
-        if (operation.getFileName() == null) {
-            return new ResponseEntity<>("Operation file has not been uploaded", HttpStatus.NOT_FOUND);
-        }
-        Path filePath = Path.of(operation.getFileName());
-        if (!Files.exists(filePath)) {
-            return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
-        }
-        try {
-            FileInputStream fileInputStream = new FileInputStream(filePath.toFile());
-            InputStreamResource resource = new InputStreamResource(fileInputStream);
-
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath.getFileName() + "\"")
-                    .contentLength(Files.size(filePath))
-                    .body(resource);
-        } catch (IOException e) {
-            return new ResponseEntity<>("File read error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseEntity.ok(operation);
     }
 
     public ResponseEntity<?> getMinData() {

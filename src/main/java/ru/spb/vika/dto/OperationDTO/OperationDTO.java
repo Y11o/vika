@@ -12,6 +12,6 @@ public class OperationDTO {
     @NotBlank(message = "Operation name must not be empty")
     private String name;
 
-    @NotBlank(message = "Operation file must not be null")
-    private MultipartFile file;
+    @NotBlank(message = "Operation must not be empty")
+    private String operation;
 }
