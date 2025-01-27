@@ -15,7 +15,7 @@ public class JacksonConfig {
         JsonFactory jsonFactory = new JsonFactory();
 
         StreamReadConstraints constraints = StreamReadConstraints.builder()
-                .maxStringLength(400000000)
+                .maxStringLength(2147483647)
                 .build();
 
         jsonFactory.setStreamReadConstraints(constraints);
