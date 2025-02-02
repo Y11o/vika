@@ -9,5 +9,5 @@ public class UploadedFileDTO {
 
     private String name;
 
-    private String stringifiedUnit8ListFile;
+    private String stringifiedUint8ListFile;
 }

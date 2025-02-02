@@ -42,7 +42,7 @@ public class UploadService {
                 .taskId(serverMediaDTO.getTaskID())
                 .operationId(operationId)
                 .name(serverMediaDTO.getMediafile().getName())
-                .content(serverMediaDTO.getMediafile().getStringifiedUnit8ListFile())
+                .content(serverMediaDTO.getMediafile().getStringifiedUint8ListFile())
                 .mediaType(tools.getMediaType(mediaType))
                 .build()
         );
