@@ -1,34 +1,28 @@
 package ru.spb.vika.services;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import ru.spb.vika.dto.OperationDTO.*;
-import ru.spb.vika.models.*;
-import ru.spb.vika.repositories.*;
-import ru.spb.vika.util.OperationNotCreatedException;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
+import ru.spb.vika.dto.OperationDTO.OperationDTO;
+import ru.spb.vika.dto.ServerMediaDTO;
+import ru.spb.vika.models.Operation;
+import ru.spb.vika.models.ServerMedia;
+import ru.spb.vika.repositories.MediaRepository;
+import ru.spb.vika.repositories.OperationsRepository;
+import ru.spb.vika.util.Tools;
 
 @Service
 public class UploadService {
     private final OperationsRepository operationsRepository;
+    private final MediaRepository mediaRepository;
+    private final Tools tools;
 
     @Autowired
-    public UploadService(OperationsRepository operationsRepository) {
+    public UploadService(OperationsRepository operationsRepository, MediaRepository mediaRepository, Tools tools) {
         this.operationsRepository = operationsRepository;
+        this.mediaRepository = mediaRepository;
+        this.tools = tools;
     }
 
     @Transactional
@@ -39,5 +33,19 @@ public class UploadService {
                 .operation(operationRequest.getOperation())
                 .build());
         return ResponseEntity.ok("Operation successfully saved!");
+    }
+
+    @Transactional
+    public String saveMedia(ServerMediaDTO serverMediaDTO, Integer operationId, String mediaType) {
+        mediaRepository.save(ServerMedia.builder()
+                .taskId(serverMediaDTO.getTaskID())
+                .operationId(operationId)
+                .uploadedFileId(serverMediaDTO.getMediafile().getId())
+                .name(serverMediaDTO.getMediafile().getName())
+                .content(serverMediaDTO.getMediafile().getStringifiedUnit8ListFile())
+                .mediaType(tools.getMediaType(mediaType))
+                .build()
+        );
+        return "Media successfully saved";
     }
 }

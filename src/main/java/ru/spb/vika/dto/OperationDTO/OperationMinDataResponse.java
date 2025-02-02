@@ -1,4 +1,4 @@
-package ru.spb.vika.dto;
+package ru.spb.vika.dto.OperationDTO;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

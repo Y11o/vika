@@ -2,31 +2,33 @@ package ru.spb.vika.services;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ru.spb.vika.dto.OperationMinDataResponse;
+import ru.spb.vika.dto.OperationDTO.OperationMinDataResponse;
+import ru.spb.vika.dto.ServerMediaResponse;
 import ru.spb.vika.models.Operation;
+import ru.spb.vika.models.ServerMedia;
+import ru.spb.vika.repositories.MediaRepository;
 import ru.spb.vika.repositories.OperationsRepository;
 import ru.spb.vika.util.ItemNotFoundException;
+import ru.spb.vika.util.Tools;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class DownloadService {
 
     private final OperationsRepository operationsRepository;
+    private final MediaRepository mediaRepository;
+    private final Tools tools;
 
     @Autowired
-    public DownloadService(OperationsRepository operationsRepository) {
+    public DownloadService(OperationsRepository operationsRepository, MediaRepository mediaRepository, Tools tools) {
         this.operationsRepository = operationsRepository;
+        this.mediaRepository = mediaRepository;
+        this.tools = tools;
     }
 
     @Transactional
@@ -48,5 +50,25 @@ public class DownloadService {
                 .id(operation.getId())
                 .opsName(operation.getName())
                 .build();
+    }
+
+    @Transactional
+    public List<ServerMediaResponse> getMedia(Integer operationId, Integer taskId, String mediaType) {
+        List<ServerMedia> serverMedias = mediaRepository.findByTaskIdAndOperationIdAndMediaType(taskId, operationId, tools.getMediaType(mediaType));
+        if (serverMedias.isEmpty()) {
+            throw new ItemNotFoundException("Media file with operation id " + operationId +
+                    "\ntask id " + taskId + "\nand mediaType " + mediaType + " was not found!");
+        }
+        List<ServerMediaResponse> response = new LinkedList<>();
+        serverMedias.forEach(serverMedia ->
+        response.add(
+                ServerMediaResponse.builder()
+                        .uploadedFileId(serverMedia.getUploadedFileId())
+                        .name(serverMedia.getName())
+                        .content(serverMedia.getContent())
+                        .taskID(serverMedia.getTaskId())
+                        .build()
+        ));
+        return response;
     }
 }

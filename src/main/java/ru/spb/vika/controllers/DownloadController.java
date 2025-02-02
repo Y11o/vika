@@ -29,6 +29,13 @@ public class DownloadController {
         return downloadService.getById(id);
     }
 
+    @GetMapping("/download/{operationId}/{taskId}/{mediaType}")
+    public ResponseEntity<?> downloadMedia(@PathVariable("operationId") Integer operationId,
+                                           @PathVariable("taskId") Integer taskId,
+                                           @PathVariable("mediaType") String mediaType) {
+        return ResponseEntity.ok(downloadService.getMedia(operationId, taskId, mediaType));
+    }
+
     @ExceptionHandler(value = ItemNotFoundException.class)
     protected ResponseEntity<?> handleItemNotFoundException(ItemNotFoundException e) {
         ErrorResponse response = new ErrorResponse(

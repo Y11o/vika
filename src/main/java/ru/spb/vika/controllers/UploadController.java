@@ -5,13 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.spb.vika.dto.OperationDTO.OperationDTO;
+import ru.spb.vika.dto.ServerMediaDTO;
 import ru.spb.vika.services.UploadService;
 import ru.spb.vika.util.ErrorResponse;
 import ru.spb.vika.util.OperationNotCreatedException;
-import org.springframework.web.multipart.MultipartFile;
+import ru.spb.vika.util.Tools;
 
 import java.util.List;
 
@@ -20,18 +20,31 @@ import java.util.List;
 public class UploadController {
 
     private final UploadService uploadService;
+    private final Tools tools;
 
     @Autowired
-    public UploadController(UploadService uploadService) {
+    public UploadController(UploadService uploadService, Tools tools) {
         this.uploadService = uploadService;
+        this.tools = tools;
     }
 
     @PostMapping("/operation")
     public ResponseEntity<?> uploadData(@Valid @RequestBody OperationDTO operationRequest, BindingResult bindingResult) {
         if (bindingResult != null && bindingResult.hasErrors()) {
-            throw new OperationNotCreatedException(buildErrorMessage(bindingResult));
+            throw new OperationNotCreatedException(tools.buildErrorMessage(bindingResult));
         }
         return uploadService.saveOperation(operationRequest);
+    }
+
+    @PostMapping("/operation/{operationId}/{mediaType}")
+    public ResponseEntity<?> uploadMedia(@Valid @RequestBody ServerMediaDTO serverMediaDTO,
+                                         @PathVariable("operationId") Integer operationId,
+                                         @PathVariable("mediaType") String mediaType,
+                                         BindingResult bindingResult) {
+        if (bindingResult != null && bindingResult.hasErrors()) {
+            throw new OperationNotCreatedException(tools.buildErrorMessage(bindingResult));
+        }
+        return ResponseEntity.ok(uploadService.saveMedia(serverMediaDTO, operationId, mediaType));
     }
 
     @ExceptionHandler(value = OperationNotCreatedException.class)
@@ -43,15 +56,4 @@ public class UploadController {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    private String buildErrorMessage(BindingResult bindingResult) {
-        StringBuilder errorMessage = new StringBuilder();
-        List<FieldError> errors = bindingResult.getFieldErrors();
-        for (FieldError error:  errors) {
-            errorMessage.append(error.getField())
-                    .append(" - ")
-                    .append(error.getDefaultMessage())
-                    .append("; ");
-        }
-        return errorMessage.toString();
-    }
 }
