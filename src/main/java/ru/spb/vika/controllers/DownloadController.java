@@ -29,7 +29,7 @@ public class DownloadController {
         return downloadService.getById(id);
     }
 
-    @GetMapping("/download/{operationId}/{taskId}/{mediaType}")
+    @GetMapping("/{operationId}/{taskId}/{mediaType}")
     public ResponseEntity<?> downloadMedia(@PathVariable("operationId") Integer operationId,
                                            @PathVariable("taskId") Integer taskId,
                                            @PathVariable("mediaType") String mediaType) {
