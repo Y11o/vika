@@ -38,9 +38,9 @@ public class UploadService {
     @Transactional
     public String saveMedia(ServerMediaDTO serverMediaDTO, Integer operationId, String mediaType) {
         mediaRepository.save(ServerMedia.builder()
+                .id(serverMediaDTO.getMediafile().getId())
                 .taskId(serverMediaDTO.getTaskID())
                 .operationId(operationId)
-                .uploadedFileId(serverMediaDTO.getMediafile().getId())
                 .name(serverMediaDTO.getMediafile().getName())
                 .content(serverMediaDTO.getMediafile().getStringifiedUnit8ListFile())
                 .mediaType(tools.getMediaType(mediaType))

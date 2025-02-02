@@ -14,7 +14,6 @@ import ru.spb.vika.util.MediaType;
 public class ServerMedia {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "task_id")
@@ -22,9 +21,6 @@ public class ServerMedia {
 
     @Column(name = "operation_id")
     private Integer operationId;
-
-    @Column(name = "uploaded_file_id")
-    private Integer uploadedFileId;
 
     @Column(name = "name")
     private String name;

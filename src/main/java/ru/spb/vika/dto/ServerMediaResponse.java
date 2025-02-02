@@ -7,9 +7,9 @@ import lombok.Data;
 @Builder
 public class ServerMediaResponse {
 
-    private Integer taskID;
-
     private Integer uploadedFileId;
+
+    private Integer taskID;
 
     private String name;
 

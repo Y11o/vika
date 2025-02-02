@@ -63,7 +63,7 @@ public class DownloadService {
         serverMedias.forEach(serverMedia ->
         response.add(
                 ServerMediaResponse.builder()
-                        .uploadedFileId(serverMedia.getUploadedFileId())
+                        .uploadedFileId(serverMedia.getId())
                         .name(serverMedia.getName())
                         .content(serverMedia.getContent())
                         .taskID(serverMedia.getTaskId())
