@@ -55,10 +55,6 @@ public class DownloadService {
     @Transactional
     public List<ServerMediaResponse> getMedia(Integer operationId, Integer taskId, String mediaType) {
         List<ServerMedia> serverMedias = mediaRepository.findByTaskIdAndOperationIdAndMediaType(taskId, operationId, tools.getMediaType(mediaType));
-        if (serverMedias.isEmpty()) {
-            throw new ItemNotFoundException("Media file with operation id " + operationId +
-                    "\ntask id " + taskId + "\nand mediaType " + mediaType + " was not found!");
-        }
         List<ServerMediaResponse> response = new LinkedList<>();
         serverMedias.forEach(serverMedia ->
         response.add(
