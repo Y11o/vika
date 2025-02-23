@@ -12,19 +12,20 @@ services:
       service-db:
         condition: service_healthy
     environment:
-      DB_URL: jdbc:postgresql://service-db:5432/vika
-      DB_USER: postgres
-      DB_PASSWORD: 12345
-      DDL_AUTO: update
+      DB_URL: ${DB_URL}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DDL_AUTO: ${DDL_AUTO}
+      ACTIVE_PROFILE: ${ACTIVE_PROFILE}
 
   service-db:
     container_name: "service-db"
     image: postgres:14.7-alpine
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 12345
-      POSTGRES_DB: vika
-      PGUSER: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGUSER: ${PGUSER}
       LANG: en_US.UTF-8
       LANGUAGE: en_US:en
       LC_ALL: en_US.UTF-8
