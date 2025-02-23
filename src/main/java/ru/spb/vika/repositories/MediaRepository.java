@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface MediaRepository extends CrudRepository<ServerMedia, Integer> {
     List<ServerMedia> findByTaskIdAndOperationIdAndMediaType(Integer taskId, Integer operationId, MediaType mediaType);
+
+    void deleteAllByOperationId(Integer operationId);
 }
