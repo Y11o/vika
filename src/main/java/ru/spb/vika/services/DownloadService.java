@@ -48,7 +48,7 @@ public class DownloadService {
     private OperationMinDataResponse operationMinDataResponseBuilder(Operation operation) {
         return OperationMinDataResponse.builder()
                 .id(operation.getId())
-                .opsName(operation.getName())
+                .name(operation.getName())
                 .build();
     }
 

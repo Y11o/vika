@@ -11,5 +11,5 @@ public class OperationMinDataResponse {
     private Integer id;
 
     @NotBlank(message = "Operation name must not be empty")
-    private String opsName;
+    private String name;
 }
